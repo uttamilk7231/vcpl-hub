@@ -678,6 +678,9 @@ function smtpTransaction(to, subject, body) {
 
         const finish = (err) => {
             try { sock && sock.destroy(); } catch (e) { /* ignore */ }
+            if (err && !err.message) {
+                err.message = String(err.code || err.name || err || 'unknown');
+            }
             err ? reject(err) : resolve(true);
         };
 
@@ -742,7 +745,7 @@ async function sendMail(to, subject, text, link) {
             console.log('[mail-smtp] sent to ' + to + ' subject=' + subject);
             return true;
         } catch (e) {
-            console.error('[mail-smtp] failed (' + e.message + '), using dev sink');
+            console.error('[mail-smtp] failed (' + e.message + ' name=' + e.name + ' code=' + (e.code || '-') + '), using dev sink');
         }
     }
     return devMailSink(to, subject, text, link);
