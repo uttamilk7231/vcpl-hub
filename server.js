@@ -657,6 +657,45 @@ const SMTP = {
     from: (process.env.SMTP_FROM || (process.env.SMTP_USER || 'no-reply@vcpl.local')).trim()
 };
 
+const GMAIL_REFRESH_TOKEN = (process.env.GMAIL_REFRESH_TOKEN || '').trim();
+const GMAIL_CLIENT_ID = (process.env.GMAIL_CLIENT_ID || process.env.GOOGLE_CLIENT_ID || '').trim();
+const GMAIL_CLIENT_SECRET = (process.env.GMAIL_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET || '').trim();
+const GMAIL_API_SENDER = (process.env.SMTP_FROM || process.env.SMTP_USER || 'no-reply@vcpl.local').trim();
+const GMAIL_API_ENABLED = !!(GMAIL_REFRESH_TOKEN && GMAIL_CLIENT_ID && GMAIL_CLIENT_SECRET);
+
+async function gmailAccessToken() {
+    const params = new URLSearchParams();
+    params.set('grant_type', 'refresh_token');
+    params.set('client_id', GMAIL_CLIENT_ID);
+    params.set('client_secret', GMAIL_CLIENT_SECRET);
+    params.set('refresh_token', GMAIL_REFRESH_TOKEN);
+    const res = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+    });
+    if (!res.ok) throw new Error('token exchange ' + res.status);
+    const j = await res.json();
+    if (!j.access_token) throw new Error('token exchange returned no access token');
+    return j.access_token;
+}
+
+async function sendGmailApiMail(to, subject, body) {
+    const token = await gmailAccessToken();
+    const msg = mailtoHeader(to, subject) + body;
+    const raw = Buffer.from(msg, 'utf8').toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+    const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ raw: raw })
+    });
+    if (!res.ok) {
+        const detail = await res.text();
+        throw new Error('gmail send ' + res.status + ' ' + String(detail).slice(0, 300));
+    }
+    return true;
+}
+
 function mailtoHeader(to, subject) {
     return 'From: ' + SMTP.from +
         '\r\nTo: ' + to +
@@ -739,6 +778,15 @@ function devMailSink(to, subject, text, link) {
 }
 
 async function sendMail(to, subject, text, link) {
+    if (GMAIL_API_ENABLED) {
+        try {
+            await sendGmailApiMail(to, subject, text);
+            console.log('[mail-gmail-api] sent to ' + to + ' subject=' + subject);
+            return true;
+        } catch (e) {
+            console.error('[mail-gmail-api] failed (' + e.message + ' name=' + e.name + ' code=' + (e.code || '-') + '), falling back');
+        }
+    }
     if (SMTP.host && SMTP.user) {
         try {
             await smtpTransaction(to, subject, text);
