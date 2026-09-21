@@ -18,10 +18,10 @@ COPY index.html bootstrap.js splash.js sw.js manifest.json icon-192.png icon-512
 COPY home home/
 COPY documents documents/
 COPY fields fields/
-COPY "data fields" "data fields"/
+COPY ["data fields/", "data fields/"]
 COPY profile profile/
-COPY "login page" "login page"/
-COPY "create account" "create account"/
+COPY ["login page/", "login page/"]
+COPY ["create account/", "create account/"]
 COPY shared shared/
 
 ENV PORT=3000
