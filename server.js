@@ -2367,7 +2367,8 @@ function serveStatic(res, url) {
             'sw.js',
             'manifest.json',
             'icon-192.png',
-            'icon-512.png'
+            'icon-512.png',
+            'release.json'
         ];
         if (ROOT_ASSETS.includes(segs[0])) return serveStaticFile(path.join(ROOT, segs[0]), res);
         return denyStatic(res);
