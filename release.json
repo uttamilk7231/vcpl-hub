@@ -2,10 +2,10 @@
   "version": "1.0.0",
   "releaseNotes": "Initial public release of VCPL Desktop and VCPL Hub for Android.",
   "desktop": {
-    "setup": "",
-    "portable": ""
+    "setup": "https://github.com/uttamilk7231/vcpl-hub/releases/download/v1.0.0/VCPL-Setup-1.0.0.exe",
+    "portable": "https://github.com/uttamilk7231/vcpl-hub/releases/download/v1.0.0/VCPL-Portable-1.0.0.exe"
   },
   "android": {
-    "apk": ""
+    "apk": "https://github.com/uttamilk7231/vcpl-hub/releases/download/v1.0.0/VCPL-Android-1.0.0.apk"
   }
 }
