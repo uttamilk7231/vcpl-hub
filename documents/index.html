@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victory CeraTech - Documents</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../shared/glass.css">
+    <link rel="stylesheet" href="../shared/toast.css">
+    <link rel="stylesheet" href="../shared/dialog.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo" id="logo-toggle" title="Toggle sidebar">
+                    <span class="logo-v">
+                        <span class="logo-short">V</span>
+                        <span class="logo-full">VCPL</span>
+                    </span>
+                </div>
+            </div>
+
+            <a href="../profile/index.html" class="user-profile" title="View profile">
+                <div class="user-avatar" id="sidebar-avatar">--</div>
+                <div class="user-info">
+                    <span class="user-name" id="sidebar-name">Guest</span>
+                    <span class="user-role">Admin</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <h3 class="nav-title">Menu</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="../home/index.html" class="nav-link">
+                                <span class="nav-icon home-icon"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></span>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item highlighted">
+                            <span class="nav-icon folder"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+                            <span>Documents</span>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../profile/index.html" class="nav-link settings">
+                                <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="page-title">Documents</h1>
+
+                <div class="tabs-row">
+                    <div class="filter-tabs" id="filter-tabs" role="tablist" aria-label="Filter documents">
+                        <button type="button" class="filter-tab active" data-filter="all">All</button>
+                        <button type="button" class="filter-tab" data-filter="active">Active</button>
+                        <button type="button" class="filter-tab" data-filter="completed">Completed</button>
+                    </div>
+                    <div class="secondary-search">
+                        <input type="text" id="search-input" placeholder="Search title, format, ID or content...">
+                    </div>
+                    <a href="../fields/index.html" class="create-btn">
+                        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                        <span>Create</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="documents-table">
+                <table class="sortable-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="title" class="sortable" tabindex="0">Document Name <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th data-sort="format" class="sortable" tabindex="0">Format <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th data-sort="members" class="sortable" tabindex="0">Members <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th data-sort="id" class="sortable" tabindex="0">ID Number <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th data-sort="status" class="sortable" tabindex="0">Status <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th data-sort="updated" class="sortable" tabindex="0">Last Edited <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th class="actions-th"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="documents-body">
+                        <!-- Dynamic content loaded via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Document Detail Modal -->
+    <div class="modal-overlay" id="detail-modal" hidden>
+        <div class="modal-card detail-card">
+            <div class="modal-header">
+                <h2 class="modal-title">Document Details</h2>
+                <button type="button" class="modal-close" id="detail-close" aria-label="Close">
+                    <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <div class="tab-bar" id="detail-tabs">
+                <button type="button" class="tab-btn active" data-tab="details">Details</button>
+                <button type="button" class="tab-btn" data-tab="members">Members</button>
+                <button type="button" class="tab-btn" data-tab="history">History</button>
+            </div>
+
+            <form id="detail-form">
+                <!-- Details tab -->
+                <div class="tab-pane active" data-pane="details">
+                    <div class="modal-field">
+                        <label for="detail-title">Document Name</label>
+                        <input type="text" id="detail-title">
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="detail-format">Format</label>
+                        <select id="detail-format">
+                            <option>Excel</option>
+                            <option>Word</option>
+                            <option>PDF</option>
+                            <option>PowerPoint</option>
+                            <option>Text</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="detail-file">File Name</label>
+                        <input type="text" id="detail-file">
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="detail-status">Status</label>
+                        <select id="detail-status">
+                            <option value="active">Active</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="modal-field">
+                            <label>Document ID</label>
+                            <span class="readonly-value" id="detail-id">--</span>
+                        </div>
+                        <div class="modal-field">
+                            <label>Created By</label>
+                            <span class="readonly-value" id="detail-creator">--</span>
+                        </div>
+                        <div class="modal-field">
+                            <label>Created On</label>
+                            <span class="readonly-value" id="detail-created">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Members tab -->
+                <div class="tab-pane" data-pane="members">
+                    <div class="modal-field">
+                        <label>Members</label>
+                        <button type="button" class="add-members-btn" id="detail-add-members">
+                            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                            <span>Add Members</span>
+                        </button>
+                        <div class="detail-members-list" id="detail-members-list"></div>
+                        <div class="members-picker" id="detail-members-picker" hidden>
+                            <p class="picker-title">Select people to add</p>
+                            <div class="picker-list" id="detail-member-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History tab -->
+                <div class="tab-pane" data-pane="history">
+                    <div class="history-list" id="detail-history"></div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="detail-cancel">Close</button>
+                    <button type="button" class="btn-primary" id="detail-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../shared/toast.js"></script>
+    <script src="../shared/dialog.js"></script>
+    <script src="script.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch((error) => {
+              console.log('ServiceWorker registration failed: ', error);
+            });
+        });
+      }
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+node_modules/
+data/
+backup_*/
+auto_backups/
+auto_reports/
+server.pid
+*.log
+firewall-log.txt
+.env
+design images/
+design prompts/
+_smoke_data2/
+test.txt
+remain work.json
+add-firewall-rule.ps1
+start-vcpl.bat
+_smoke_*.log

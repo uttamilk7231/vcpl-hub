@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victory CeraTech - Create Account</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../shared/glass.css">
+</head>
+<body>
+    <div class="auth-layout">
+        <!-- Branding Panel -->
+        <aside class="auth-brand">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    <span class="brand-logo-mark">V</span>
+                    <span class="brand-logo-text">VCPL</span>
+                </div>
+                <h2 class="brand-title">Victory CeraTech</h2>
+                <p class="brand-tagline">Advanced Ceramic Solutions</p>
+            </div>
+        </aside>
+
+        <!-- Form Panel -->
+        <main class="auth-panel">
+            <div class="auth-card">
+                <h1 class="auth-heading">Get started free.</h1>
+                <p class="auth-subtext">Free forever. No credit card needed.</p>
+
+                <form class="auth-form" id="signup-form">
+                    <div class="form-field">
+                        <label for="signup-email">Email Address</label>
+                        <input type="email" id="signup-email" placeholder="you@company.com" autocomplete="email">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="signup-name">Your name</label>
+                        <input type="text" id="signup-name" placeholder="Full name" autocomplete="name">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" placeholder="Enter your password" autocomplete="new-password">
+                        <span class="strength-badge" id="strength-badge">Strong</span>
+                        <div class="strength-bar" id="strength-bar"><span></span></div>
+                    </div>
+
+                    <button type="submit" class="cta-btn">Sign up</button>
+                </form>
+
+                <div class="divider"><span>Or sign up with</span></div>
+
+                <div class="social-buttons">
+                    <button type="button" class="social-btn" id="google-signup-btn">
+                        <svg class="google-icon" viewBox="0 0 24 24"><path d="M21.8 12.2c0-.7-.06-1.4-.18-2H12v3.8h5.5a4.9 4.9 0 0 1-2.1 3.2v2.7h3.4c2-1.9 3.1-4.6 3.1-7.7z"/><path d="M12 22c2.8 0 5.2-.9 6.9-2.5l-3.4-2.7c-.9.6-2.1 1-3.5 1-2.7 0-5-1.8-5.8-4.2H2.7v2.8A10 10 0 0 0 12 22z"/><path d="M6.2 13.6c-.2-.6-.3-1.2-.3-1.9s.1-1.3.3-1.9V7H2.7a10 10 0 0 0 0 9L6.2 13.6z"/><path d="M12 6.5c1.5 0 2.9.5 4 1.6l3-3A10 10 0 0 0 2.7 7l3.5 2.7c.8-2.4 3.1-4.2 5.8-4.2z"/></svg>
+                        <span>Google</span>
+                    </button>
+                </div>
+
+                <p class="auth-alternate">
+                    Already have an account?
+                    <a href="../login page/index.html">Sign in</a>
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

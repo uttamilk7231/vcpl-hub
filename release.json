@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "releaseNotes": "Initial public release of VCPL Desktop and VCPL Hub for Android.",
+  "desktop": {
+    "setup": "",
+    "portable": ""
+  },
+  "android": {
+    "apk": ""
+  }
+}

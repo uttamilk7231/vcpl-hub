@@ -1,0 +1,16 @@
+services:
+  prototype:
+    build: .
+    image: vcpl-prototype:latest
+    container_name: vcpl-prototype
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DATA_DIR=/app/data
+    restart: unless-stopped
+    volumes:
+      - vcpl-data:/app/data
+
+volumes:
+  vcpl-data:

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victory CeraTech - Data Fields</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../shared/glass.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo" id="logo-toggle" title="Toggle sidebar">
+                    <span class="logo-v">
+                        <span class="logo-short">V</span>
+                        <span class="logo-full">VCPL</span>
+                    </span>
+                </div>
+            </div>
+
+            <a href="../profile/index.html" class="user-profile" title="View profile">
+                <div class="user-avatar" id="sidebar-avatar">--</div>
+                <div class="user-info">
+                    <span class="user-name" id="sidebar-name">Guest</span>
+                    <span class="user-role">Admin</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <h3 class="nav-title">Menu</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="../home/index.html" class="nav-link">
+                                <span class="nav-icon home-icon"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></span>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item highlighted">
+                            <span class="nav-icon folder"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+                            <span>Documents</span>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../profile/index.html" class="nav-link settings">
+                                <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <a href="../documents/index.html" class="back-top">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Documents
+            </a>
+
+            <div class="content-header">
+                <h1 class="page-title">Data Fields</h1>
+                <p class="page-subtitle">Contents of the selected document, shown in the same format and order as they appear inside it.</p>
+            </div>
+
+            <div class="doc-tabs" id="doc-tabs" hidden>
+                <div class="doc-tabs-scroll" id="doc-tabs-scroll"></div>
+                <button type="button" class="doc-tabs-add" id="doc-tabs-add" title="Open another document" aria-label="Open another document">
+                    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
+            </div>
+
+            <div class="doc-tabs-picker-pane" id="doc-tabs-picker-pane" hidden>
+                <p class="picker-title">Select a document to open</p>
+                <div class="picker-list" id="doc-tabs-picker-list"></div>
+            </div>
+
+            <div class="doc-meta-card" id="doc-meta" hidden>
+                <div class="doc-meta-main">
+                    <div class="doc-icon" id="meta-icon">FILE</div>
+                    <div class="doc-meta-info">
+                        <h2 id="meta-title">--</h2>
+                        <div class="doc-meta-sub">
+                            <span id="meta-format"></span>
+                            <span class="meta-inline">Created by</span>
+                            <span id="meta-creator">--</span>
+                            <span class="meta-inline">on</span>
+                            <span id="meta-created">--</span>
+                        </div>
+                    </div>
+                    <div class="doc-meta-actions">
+                        <a class="download-btn" id="download-btn" hidden>
+                            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                            Download Original
+                        </a>
+                    </div>
+                </div>
+                <div class="doc-meta-grid">
+                    <div class="meta-item"><label>ID Number</label><span id="meta-id">--</span></div>
+                    <div class="meta-item"><label>File Name</label><span id="meta-file">--</span></div>
+                    <div class="meta-item"><label>Status</label><span id="meta-status">--</span></div>
+                    <div class="meta-item"><label>Total Fields</label><span id="meta-count">--</span></div>
+                </div>
+            </div>
+
+            <div id="file-content-area" hidden>
+                <div class="file-content-header">
+                    <h2>File Contents</h2>
+                    <span class="file-content-note" id="file-content-note"></span>
+                </div>
+
+                <div class="file-toolbar" id="file-toolbar" hidden>
+                    <button type="button" class="tb-btn primary" id="btn-modify">Modify</button>
+                    <button type="button" class="tb-btn danger" id="btn-remove">Remove</button>
+                    <div class="tb-add">
+                        <button type="button" class="tb-btn" id="btn-add">Add</button>
+                        <div class="tb-add-menu" id="add-menu" hidden>
+                            <button type="button" class="add-item" data-act="row">Add Row</button>
+                            <button type="button" class="add-item" data-act="column">Add Column</button>
+                            <button type="button" class="add-item" data-act="box">Add Box</button>
+                            <button type="button" class="add-item" data-act="copy-row">Copy Row</button>
+                            <button type="button" class="add-item" data-act="copy-column">Copy Column</button>
+                        </div>
+                    </div>
+<button type="button" class="tb-btn primary" id="btn-save">Save</button>
+                    <button type="button" class="tb-btn" id="btn-undo" title="Undo last change (Ctrl+Z)">Undo</button>
+                    <button type="button" class="tb-btn" id="btn-history" title="Restore an earlier version">History</button>
+                    <button type="button" class="tb-btn" id="btn-reset">Reset</button>
+                    <button type="button" class="tb-btn" id="btn-export">Calendar Export</button>
+                    <span class="autosave-status" id="autosave-status"></span>
+                    <span class="collab-status" id="collab-status" title="Live collaborators"></span>
+                </div>
+
+                <div class="device-connect" id="device-connect" hidden>
+                    <span class="device-connect-label">Device file:</span>
+                    <input type="text" id="device-path" placeholder="Full path, e.g. C:\Users\You\Desktop\STock.xlsx" />
+                    <button type="button" class="tb-btn" id="btn-connect">Connect real file</button>
+                    <button type="button" class="tb-btn" id="btn-disconnect" hidden>Disconnect</button>
+                    <label class="device-auto" title="Watch the device file and reload the latest copy automatically when it changes" for="device-auto-refresh">
+                        <input type="checkbox" id="device-auto-refresh" checked> Auto refresh
+                    </label>
+                    <span class="device-status" id="device-status"></span>
+                </div>
+
+                <div class="file-search" id="file-search-bar" hidden>
+                    <input type="text" id="file-search-input" placeholder="Search rows… use / to combine terms  (e.g. OP / CRYSTAL MOKA / 54)" />
+                    <button type="button" class="tb-btn" id="file-search-clear">Clear</button>
+                    <span class="file-search-count" id="file-search-count"></span>
+                </div>
+
+                <div class="documents-table" id="file-content-wrap"></div>
+
+                <div class="pager" id="file-pager" hidden>
+                    <button type="button" class="tb-btn" id="page-prev" disabled>&lsaquo; Prev</button>
+                    <span id="page-info"></span>
+                    <button type="button" class="tb-btn" id="page-next" disabled>Next &rsaquo;</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Calendar export panel -->
+    <div class="export-overlay" id="export-panel" hidden>
+        <div class="export-panel-box">
+            <div class="export-panel-head">
+                <h3>Export by date</h3>
+                <button type="button" class="exp-close" id="btn-export-cancel" title="Close">&times;</button>
+            </div>
+
+            <div class="exp-tabs">
+                <button type="button" class="exp-tab active" data-mode="range">Range</button>
+                <button type="button" class="exp-tab" data-mode="month">Month</button>
+                <button type="button" class="exp-tab" data-mode="year">Year</button>
+                <button type="button" class="exp-tab" data-mode="day">24h Day</button>
+            </div>
+
+            <div class="exp-fields" data-f="range">
+                <label class="exp-label">From
+                    <input type="date" id="exp-from" />
+                </label>
+                <label class="exp-label">To
+                    <input type="date" id="exp-to" />
+                </label>
+            </div>
+            <div class="exp-fields" data-f="month" hidden>
+                <label class="exp-label">Month
+                    <input type="month" id="exp-month" />
+                </label>
+            </div>
+            <div class="exp-fields" data-f="year" hidden>
+                <label class="exp-label">Year
+                    <input type="number" id="exp-year" min="2000" max="2100" placeholder="2026" />
+                </label>
+            </div>
+            <div class="exp-fields" data-f="day" hidden>
+                <label class="exp-label">Day
+                    <input type="date" id="exp-day" />
+                </label>
+            </div>
+
+            <div class="exp-scope">
+                <span class="exp-label">Include</span>
+                <label class="exp-check"><input type="checkbox" id="exp-scope-changes" /> Change report</label>
+                <label class="exp-check"><input type="checkbox" id="exp-scope-rows" checked /> File rows by date</label>
+            </div>
+
+            <div class="exp-format">
+                <label class="exp-label">Export as
+                    <select id="exp-format">
+                        <option value="xlsx">Excel (.xlsx)</option>
+                        <option value="docx">Word (.docx)</option>
+                        <option value="pdf">PDF (.pdf)</option>
+                        <option value="txt">Notepad (.txt)</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="exp-actions">
+                <button type="button" class="tb-btn" id="btn-export-preview">Preview</button>
+                <button type="button" class="tb-btn primary" id="btn-export-run">Export</button>
+            </div>
+            <p class="exp-msg" id="exp-msg"></p>
+            <div class="exp-preview" id="exp-preview" hidden></div>
+        </div>
+    </div>
+
+    <!-- Version history panel -->
+    <div class="export-overlay" id="history-panel" hidden>
+        <div class="export-panel-box history-box">
+            <div class="export-panel-head">
+                <h3>Version history</h3>
+                <button type="button" class="exp-close" id="btn-history-close" title="Close">&times;</button>
+            </div>
+            <p class="exp-msg" id="history-msg">Loading…</p>
+            <div class="history-list" id="history-list"></div>
+            <p class="history-hint">Click Restore on any version to bring that content back. Current rows are saved as a new version first when you restore.</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+    <script src="script.js"></script>
+</body>
+</html>

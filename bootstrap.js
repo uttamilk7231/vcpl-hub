@@ -1,0 +1,1 @@
+fetch('/api/bootstrap').then(r => r.json()).then(data => { if (data.loggedIn && data.user) { window.location.replace('home/index.html'); } else if (data.hasAccount) { window.location.replace('login page/index.html'); } else { window.location.replace('create account/index.html'); } }).catch(() => { window.location.replace('create account/index.html?err=server'); });

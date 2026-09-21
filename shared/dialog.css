@@ -1,0 +1,126 @@
+/* ===== Shared prompt / confirm modals ===== */
+.v-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(18, 22, 30, 0.45);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: v-fade 0.18s ease-out both;
+}
+
+.v-modal {
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff;
+    border: 1px solid #e7e9ee;
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(15, 18, 26, 0.28);
+    padding: 22px 22px 18px;
+    animation: v-pop 0.22s var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)) both;
+}
+
+.v-modal-title {
+    margin: 0 0 6px;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+    color: #111318;
+}
+
+.v-modal-msg {
+    margin: 0 0 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #5f6269;
+}
+
+.v-modal-input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 6px;
+    border: 1.5px solid #d6d9e0;
+    border-radius: 12px;
+    font-size: 15px;
+    color: #15161a;
+    outline: none;
+    box-sizing: border-box;
+    background: #fafbfc;
+    font-family: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.v-modal-input:focus {
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.14);
+    background: #ffffff;
+}
+
+.v-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.v-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 11px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.12s var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+                box-shadow 0.15s ease;
+    font-family: inherit;
+}
+
+.v-btn:active {
+    transform: scale(0.97);
+}
+
+.v-btn-ghost {
+    background: #eef1f6;
+    color: #3c3d40;
+}
+
+.v-btn-ghost:hover {
+    background: #e4e8ef;
+}
+
+.v-btn-primary {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(29, 78, 216, 0.28);
+}
+
+.v-btn-primary:hover {
+    box-shadow: 0 10px 22px rgba(29, 78, 216, 0.38);
+}
+
+.v-btn-danger {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(220, 38, 38, 0.26);
+}
+
+.v-btn-danger:hover {
+    box-shadow: 0 10px 22px rgba(220, 38, 38, 0.36);
+}
+
+@keyframes v-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes v-pop {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}

@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: vcpl-hub
+    runtime: docker
+    region: singapore
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: BASE_URL
+        value: https://vcpl-hub.onrender.com
+      - key: COOKIE_SECURE
+        value: "1"
+      - key: SESSION_TTL_HOURS
+        value: "168"
+      - key: DATA_DIR
+        value: /tmp/vcpl-data
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        value: swamiuttam93@gmail.com
+      - key: SMTP_FROM
+        value: swamiuttam93@gmail.com
+      - key: GOOGLE_REDIRECT
+        value: https://vcpl-hub.onrender.com/api/auth/google/callback
+      - key: SMTP_PASS
+        sync: false
+      - key: NEON_DATABASE_URL
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false

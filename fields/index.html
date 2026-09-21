@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victory CeraTech - Fields</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../shared/glass.css">
+    <link rel="stylesheet" href="../shared/toast.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo" id="logo-toggle" title="Toggle sidebar">
+                    <span class="logo-v">
+                        <span class="logo-short">V</span>
+                        <span class="logo-full">VCPL</span>
+                    </span>
+                </div>
+            </div>
+
+            <a href="../profile/index.html" class="user-profile" title="View profile">
+                <div class="user-avatar" id="sidebar-avatar">--</div>
+                <div class="user-info">
+                    <span class="user-name" id="sidebar-name">Guest</span>
+                    <span class="user-role">Admin</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <h3 class="nav-title">Menu</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="../home/index.html" class="nav-link">
+                                <span class="nav-icon home-icon"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></span>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item highlighted">
+                            <a href="../documents/index.html" class="nav-link">
+                                <span class="nav-icon folder"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+                                <span>Documents</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../profile/index.html" class="nav-link settings">
+                                <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <a href="../documents/index.html" class="back-top">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Documents
+            </a>
+
+            <div class="content-header">
+                <h1 class="page-title">Fields</h1>
+                <p class="auth-subtext">Upload a document, review its fields, then create it.</p>
+            </div>
+
+            <div class="workflow-card">
+                <div class="step-tabs" id="step-tabs">
+                    <button type="button" class="step-btn" data-step="upload"><span class="step-num">1</span> Upload</button>
+                    <button type="button" class="step-btn" data-step="fields"><span class="step-num">2</span> Fields</button>
+                    <button type="button" class="step-btn" data-step="details"><span class="step-num">3</span> Details</button>
+                    <button type="button" class="step-btn" data-step="members"><span class="step-num">4</span> Members</button>
+                </div>
+
+                <!-- Step 1: Upload -->
+                <div class="step-pane" data-pane="upload">
+                    <div class="upload-zone" id="upload-zone" role="button" tabindex="0">
+                        <input type="file" id="doc-file" hidden>
+                        <svg class="upload-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+                        <p class="upload-text">Click or drop your file here</p>
+                        <span class="upload-hint">Excel, Word, PDF, CSV or TXT</span>
+                    </div>
+
+                    <div class="format-badge" id="format-badge" hidden></div>
+
+                    <div class="padded-upload">
+                        <div class="file-preview" id="file-preview" hidden></div>
+                        <div class="fields-note" id="upload-note" hidden>
+                            <strong>Auto-detected.</strong> Review the extracted fields in the <b>Fields</b> tab, edit them, or add your own.
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn-primary" id="upload-next">Continue to Fields</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Fields -->
+                <div class="step-pane" data-pane="fields">
+                    <div class="fields-note" id="fields-note">
+                        These fields were extracted from the uploaded file. Edit the values or add new fields before creating the document.
+                    </div>
+
+                    <table class="fields-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Field Name</th>
+                                <th>Value</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="fields-body">
+                            <!-- injected -->
+                        </tbody>
+                    </table>
+
+                    <div class="fields-actions">
+                        <button type="button" class="add-field-btn" id="add-field-btn">
+                            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                            <span>Add Field</span>
+                        </button>
+                        <button type="button" class="previous-step" id="fields-back">
+                            <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                            Back
+                        </button>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn-primary" id="fields-next">Continue to Details</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Details -->
+                <div class="step-pane" data-pane="details">
+                    <button type="button" class="previous-step" id="details-back">
+                        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                        Back
+                    </button>
+
+                    <div class="modal-field">
+                        <label for="doc-name">Document Name</label>
+                        <input type="text" id="doc-name" placeholder="e.g. Q3 Sales Report">
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="doc-format">Format</label>
+                        <select id="doc-format">
+                            <option>Excel</option>
+                            <option>Word</option>
+                            <option>PDF</option>
+                            <option>PowerPoint</option>
+                            <option>Text</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="doc-file-name">File Name</label>
+                        <input type="text" id="doc-file-name" placeholder="uploaded file name">
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="doc-status">Status</label>
+                        <select id="doc-status">
+                            <option value="active">Active</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn-primary" id="details-next">Continue to Members</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Members -->
+                <div class="step-pane" data-pane="members">
+                    <button type="button" class="previous-step" id="members-back">
+                        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                        Back
+                    </button>
+
+                    <div class="modal-field">
+                        <label>Members</label>
+                        <button type="button" class="add-members-btn" id="add-members-btn">
+                            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                            <span>Add Members</span>
+                        </button>
+                        <div class="member-chips" id="member-chips"></div>
+                        <div class="members-picker" id="members-picker" hidden>
+                            <p class="picker-title">Select people</p>
+                            <div class="picker-list" id="member-list"><!-- injected --></div>
+                        </div>
+                    </div>
+
+                    <div class="modal-field" id="import-mode-field">
+                        <label>Document content</label>
+                        <div class="import-mode-cards">
+                            <label class="import-mode-card selected">
+                                <input type="radio" name="import-mode" value="data" checked>
+                                <span class="im-title">With data</span>
+                                <span class="im-desc">Copy the complete file contents as-is.</span>
+                            </label>
+                            <label class="import-mode-card" id="import-mode-format">
+                                <input type="radio" name="import-mode" value="format">
+                                <span class="im-title">With format</span>
+                                <span class="im-desc">Create an empty sheet with the detected headings only.</span>
+                            </label>
+                        </div>
+                        <p class="import-format-summary" id="import-format-summary" hidden></p>
+                        <p class="import-format-note" id="import-format-note" hidden></p>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn-secondary" id="cancel-btn">Cancel</button>
+                        <button type="button" class="btn-primary" id="create-btn">Create Document</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../shared/toast.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

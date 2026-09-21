@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victory CeraTech - Dashboard</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../shared/glass.css">
+    <link rel="stylesheet" href="../shared/toast.css">
+    <link rel="stylesheet" href="../shared/dialog.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo" id="logo-toggle" title="Toggle sidebar">
+                    <span class="logo-v">
+                        <span class="logo-short">V</span>
+                        <span class="logo-full">VCPL</span>
+                    </span>
+                </div>
+            </div>
+
+            <a href="../profile/index.html" class="user-profile" title="View profile">
+                <div class="user-avatar" id="sidebar-avatar">--</div>
+                <div class="user-info">
+                    <span class="user-name" id="sidebar-name">Guest</span>
+                    <span class="user-role">Admin</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <h3 class="nav-title">Menu</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item highlighted">
+                            <span class="nav-icon home-icon"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></span>
+                            <span>Home</span>
+                        </li>
+                         <li class="nav-item">
+                             <a href="../documents/index.html" class="nav-link">
+                                 <span class="nav-icon folder"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+                                 <span>Documents</span>
+                             </a>
+                         </li>
+                        <li class="nav-item">
+                            <a href="../profile/index.html" class="nav-link settings">
+                                <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="page-title">Recent</h1>
+
+                <div class="tabs-row">
+                    <div class="filter-tabs" id="filter-tabs" role="tablist" aria-label="Filter documents">
+                        <button type="button" class="filter-tab active" data-filter="all">All</button>
+                        <button type="button" class="filter-tab" data-filter="active">Active</button>
+                        <button type="button" class="filter-tab" data-filter="completed">Completed</button>
+                    </div>
+                    <div class="secondary-search">
+                        <input type="text" id="search-input" placeholder="Search title, owner, ID or content...">
+                    </div>
+                    <button class="create-btn" id="create-doc-btn" type="button" title="Create a new document">
+                        <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                        New
+                    </button>
+                </div>
+            </div>
+
+            <div class="stat-cards" id="stat-cards" aria-label="Summary">
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-total">0</span>
+                    <span class="stat-label">Documents</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-active">0</span>
+                    <span class="stat-label">Active</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-completed">0</span>
+                    <span class="stat-label">Completed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-backup">—</span>
+                    <span class="stat-label">Last backup</span>
+                </div>
+            </div>
+
+            <div class="documents-table">
+                <table class="sortable-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="title" class="sortable" tabindex="0">Document Name <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th data-sort="category" class="sortable" tabindex="0">Type <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th data-sort="user" class="sortable" tabindex="0">User Name <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th data-sort="id" class="sortable" tabindex="0">ID Number <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th data-sort="status" class="sortable" tabindex="0">Status <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th data-sort="updated" class="sortable" tabindex="0">Last Edited <span class="sort-ind" aria-hidden="true"></span></th>
+                            <th class="actions-th">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documents-body">
+                        <!-- Dynamic content loaded via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="../shared/toast.js"></script>
+    <script src="../shared/dialog.js"></script>
+    <script src="script.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch((error) => {
+              console.log('ServiceWorker registration failed: ', error);
+            });
+        });
+      }
+    </script>
+</body>
+</html>

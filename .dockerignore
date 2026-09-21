@@ -1,0 +1,18 @@
+node_modules
+.git
+*.log
+server.pid
+design images
+design prompts
+_smoke_data2
+_smoke_err.log
+_smoke_out.log
+test.txt
+remain work.json
+USER_GUIDE.md
+add-firewall-rule.ps1
+start-vcpl.bat
+data
+backup_*
+auto_backups
+auto_reports

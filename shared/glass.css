@@ -1,0 +1,129 @@
+/* ==========================================================
+   VCPL Light Glass Theme
+   Shared layer linked on every admin portal page. Load AFTER
+   the page's own style.css so these rules win. Tune freely —
+   this is the single place to restyle the whole portal.
+   ========================================================== */
+
+:root {
+    --bg-white: rgba(255, 255, 255, 0.72);
+    --bg-sidebar: rgba(255, 255, 255, 0.45);
+    --border: rgba(15, 23, 42, 0.10);
+    --text-dark: #0b1c30;
+    --text-muted: #5b6472;
+    --text-light: #8494a8;
+    --primary: #0051d5;
+    --primary-soft: rgba(0, 81, 213, 0.10);
+    --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.10);
+    --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.14);
+}
+
+body {
+    background:
+        radial-gradient(1100px 560px at 12% -8%, rgba(0, 81, 213, 0.14), transparent 60%),
+        radial-gradient(900px 620px at 100% 0%, rgba(13, 148, 136, 0.12), transparent 55%),
+        radial-gradient(1000px 700px at 85% 100%, rgba(124, 58, 237, 0.08), transparent 50%),
+        linear-gradient(160deg, #eef2ff 0%, #fbfcff 45%, #eef6ff 100%);
+    background-attachment: fixed;
+    color: var(--text-dark);
+    transition: background-color 0.3s ease;
+}
+
+.app-container {
+    background: transparent;
+}
+
+/* ---- Frosted sidebar ---- */
+.sidebar {
+    background: var(--bg-sidebar);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-right: 1px solid var(--border);
+}
+
+.sidebar .nav-item,
+.sidebar .user-profile,
+.sidebar .nav-title,
+.sidebar .user-name,
+.sidebar .user-role {
+    color: var(--text-dark);
+}
+
+.sidebar .nav-item.highlighted {
+    background: rgba(0, 81, 213, 0.12);
+    color: var(--primary);
+}
+
+/* ---- Frosted content panes ---- */
+.main-content {
+    background: transparent;
+}
+
+.card,
+.panel,
+.stat-card,
+.metric-card,
+.table-container,
+.content-card,
+.sheet-card,
+.dashboard-card,
+.widget,
+.record-card {
+    background: var(--bg-white) !important;
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow-md);
+}
+
+table,
+.table {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+}
+
+.modal,
+.dialog,
+.sheet {
+    background: rgba(255, 255, 255, 0.86) !important;
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+}
+
+.toast {
+    background: rgba(255, 255, 255, 0.88) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+}
+
+/* ---- Headings & text on the light glass base ---- */
+body h1, body h2, body h3, body h4 {
+    color: var(--text-dark);
+}
+
+.content-header,
+.toolbar,
+.top-bar {
+    background: transparent;
+}
+
+/* ---- Utility ---- */
+.glass-frost {
+    background: var(--bg-white) !important;
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+}
+
+.glass-chip {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
