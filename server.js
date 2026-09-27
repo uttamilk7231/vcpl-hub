@@ -1035,6 +1035,10 @@ function rateLimited(key, limit, windowMs) {
 }
 
 function clientIp(req) {
+    // Behind a proxy (Render, nginx) every socket shares one address, which would
+    // make the rate-limit buckets global instead of per client.
+    const fwd = String(req.headers['x-forwarded-for'] || '');
+    if (fwd) return fwd.split(',')[0].trim();
     return (req.socket && req.socket.remoteAddress) || 'unknown';
 }
 
