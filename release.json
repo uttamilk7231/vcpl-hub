@@ -1,11 +1,20 @@
 {
-  "version": "1.0.0",
-  "releaseNotes": "Initial public release of VCPL Desktop and VCPL Hub for Android.",
+  "version": "1.1.0",
+  "releaseNotes": "VCPL Member Portal: new Portal, Recent, Shared and Notifications pages, real desktop and Android notifications, document sharing, vertical field headings, and correct sheet title/header detection.",
+  "latest": {
+    "android": "https://github.com/uttamilk7231/vcpl-hub/releases/latest/download/VCPL-Android.apk",
+    "desktop": "https://github.com/uttamilk7231/vcpl-hub/releases/latest/download/VCPL-Setup.exe",
+    "portable": "https://github.com/uttamilk7231/vcpl-hub/releases/latest/download/VCPL-Portable.exe",
+    "qr": {
+      "android": "https://vcpl-hub.onrender.com/download/android",
+      "desktop": "https://vcpl-hub.onrender.com/download/desktop"
+    }
+  },
   "desktop": {
-    "setup": "https://github.com/uttamilk7231/vcpl-hub/releases/download/v1.0.0/VCPL-Setup-1.0.0.exe",
-    "portable": "https://github.com/uttamilk7231/vcpl-hub/releases/download/v1.0.0/VCPL-Portable-1.0.0.exe"
+    "setup": "https://github.com/uttamilk7231/vcpl-hub/releases/latest/download/VCPL-Setup.exe",
+    "portable": "https://github.com/uttamilk7231/vcpl-hub/releases/latest/download/VCPL-Portable.exe"
   },
   "android": {
-    "apk": "https://github.com/uttamilk7231/vcpl-hub/releases/download/v1.0.0/VCPL-Android-1.0.0.apk"
+    "apk": "https://github.com/uttamilk7231/vcpl-hub/releases/latest/download/VCPL-Android.apk"
   }
 }

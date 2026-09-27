@@ -2748,6 +2748,38 @@ function escapeHtml(s) {
 }
 
 // Public download page: shares the desktop installer and the Android APK.
+// Permanent download links. They always resolve to the newest published build
+// via GitHub's "latest release" asset URLs, so a QR code or bookmark made today
+// keeps handing users the current app after every future update.
+const RELEASE_ASSET_BASE = 'https://github.com/uttamilk7231/vcpl-hub/releases/latest/download/';
+const LATEST_ASSETS = {
+    '/download/android': { file: 'VCPL-Android.apk', type: 'application/vnd.android.package-archive' },
+    '/download/apk': { file: 'VCPL-Android.apk', type: 'application/vnd.android.package-archive' },
+    '/download/desktop': { file: 'VCPL-Setup.exe', type: 'application/vnd.microsoft.portable-executable' },
+    '/download/setup': { file: 'VCPL-Setup.exe', type: 'application/vnd.microsoft.portable-executable' },
+    '/download/portable': { file: 'VCPL-Portable.exe', type: 'application/vnd.microsoft.portable-executable' }
+};
+
+function serveLatestAsset(req, res, url, asset) {
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+        res.writeHead(405, Object.assign({ Allow: 'GET, HEAD' }, RESP_HEADERS));
+        return res.end();
+    }
+    const target = RELEASE_ASSET_BASE + asset.file;
+    if (url.searchParams.get('direct') === '1') {
+        res.writeHead(200, Object.assign({
+            'Content-Type': asset.type,
+            'Content-Disposition': 'attachment; filename="' + asset.file + '"'
+        }, RESP_HEADERS));
+        return res.end('Download the latest VCPL build from ' + target + '\n');
+    }
+    res.writeHead(302, Object.assign({
+        Location: target,
+        'Cache-Control': 'no-store'
+    }, RESP_HEADERS));
+    res.end();
+}
+
 function serveDownload(res) {
     const rel = readRelease();
     const d = rel.desktop || {};
@@ -2774,9 +2806,10 @@ function serveDownload(res) {
         '</style></head><body><div class="card">' +
         '<h1>Download VCPL</h1><p class="sub">Version ' + escapeHtml(rel.version || APP_VERSION) + '</p>' +
         '<div><strong>Windows desktop</strong><div class="row">' +
-        btn(d.setup, 'Download installer (.exe)') + btn(d.portable, 'Download portable (.exe)') + '</div></div>' +
+        btn('/download/desktop', 'Download installer (.exe)') + btn('/download/portable', 'Download portable (.exe)') + '</div></div>' +
         '<div style="margin-top:20px"><strong>Android</strong><div class="row">' +
-        btn(a.apk, 'Download APK') + '</div><div class="note">Enable "Install unknown apps" for your browser to install.</div></div>' +
+        btn('/download/android', 'Download APK') + '</div><div class="note">Enable "Install unknown apps" for your browser to install.</div></div>' +
+        '<p class="note">These links always deliver the newest published build, so this page and any saved QR code stay current after future updates.</p>' +
         '<p class="note">Builds are unsigned; Windows may show a SmartScreen prompt (choose More info &rarr; Run anyway).</p>' +
         '</div></body></html>';
     res.writeHead(200, Object.assign({ 'Content-Type': 'text/html; charset=utf-8' }, RESP_HEADERS));
@@ -2806,6 +2839,8 @@ const server = http.createServer((req, res) => {
         handleApi(req, res, url);
     } else if (url.pathname === '/download' || url.pathname === '/download/') {
         serveDownload(res);
+    } else if (LATEST_ASSETS[url.pathname]) {
+        serveLatestAsset(req, res, url, LATEST_ASSETS[url.pathname]);
     } else {
         serveStatic(res, url);
     }
