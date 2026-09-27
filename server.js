@@ -4,6 +4,7 @@ const path = require('path');
 const crypto = require('crypto');
 const cloudStore = require('./store');
 const audit = require('./audit');
+const notifyStore = require('./notify');
 
 let XLSX = null;
 try { XLSX = require('xlsx'); } catch (e) { /* optional spreadsheet parser */ }
@@ -1161,6 +1162,72 @@ function canAccessDocument(doc, user) {
     if (doc.user && doc.user.email === user.email) return true;
     return Array.isArray(doc.members) && doc.members.some(m => m && m.email === user.email);
 }
+
+// ---------- Member notifications / recent activity ----------
+// Only these audit actions are member-facing; sign-in chatter stays internal.
+const ACTIVITY_ACTIONS = new Set([
+    'document-create',
+    'document-update',
+    'document-content',
+    'document-share',
+    'document-device-sync',
+    'document-delete'
+]);
+
+const ACTIVITY_TITLES = {
+    'document-create': 'added a new document',
+    'document-update': 'updated document details',
+    'document-content': 'saved new data',
+    'document-share': 'shared a document',
+    'document-device-sync': 'synced a device file',
+    'document-delete': 'deleted a document'
+};
+
+function displayNameOf(email) {
+    const u = getUsers().find(x => x.email === String(email || '').toLowerCase());
+    return u ? (u.name || u.email) : String(email || 'Someone');
+}
+
+// Turn an audit entry into the shape the Recent page renders.
+function toActivityItem(entry) {
+    const detail = entry.detail || {};
+    const title = detail.title || '(no title)';
+    return {
+        id: 'a' + entry.seq,
+        ts: entry.ts,
+        action: entry.action,
+        title: title,
+        summary: (displayNameOf(entry.actor) + ' ' + (ACTIVITY_TITLES[entry.action] || 'made a change') + ': ' + title).trim(),
+        actor: displayNameOf(entry.actor),
+        docId: detail.docId || null,
+        category: detail.category || ''
+    };
+}
+
+// Notify every other member of a document (never the person who acted).
+function notifyMembers(doc, actor, opts) {
+    if (!doc || !actor) return 0;
+    const o = opts || {};
+    let sent = 0;
+    const seen = new Set();
+    const targets = []
+        .concat(Array.isArray(doc.members) ? doc.members : [])
+        .concat(doc.user ? [doc.user] : []);
+    for (const m of targets) {
+        const email = m && m.email ? String(m.email).toLowerCase() : '';
+        if (!email || email === String(actor.email).toLowerCase() || seen.has(email)) continue;
+        seen.add(email);
+        if (notifyStore.notify(email, {
+            type: o.type || 'document',
+            title: o.title || 'Document update',
+            body: o.body || '',
+            docId: doc.documentId,
+            actor: actor.name || actor.email
+        })) sent++;
+    }
+    return sent;
+}
+
 async function handleApi(req, res, url) {
     const method = req.method;
     MON_REQ++;
@@ -1254,6 +1321,13 @@ async function handleApi(req, res, url) {
 
         const base = baseFromReq(req);
         sendVerificationMail(email, verifyToken, base).catch(e => console.error('[mail] verify send error:', e && e.message));
+
+        notifyStore.notify(email, {
+            type: 'welcome',
+            title: 'Welcome to the VCPL Member Portal',
+            body: 'Verify your email to activate your account, then your shared documents will appear here.',
+            actor: 'VCPL'
+        });
 
         return sendJson(res, 201, { ok: true, user: { name: name, email: email }, message: 'Verification link sent. Check your inbox to activate your account.' });
     }
@@ -1607,6 +1681,13 @@ async function handleApi(req, res, url) {
         list.unshift(doc);
         saveDocuments(list);
 
+        audit.append(user.email, 'document-create', { docId: doc.documentId, title: doc.title, category: doc.category });
+        notifyMembers(doc, user, {
+            type: 'document',
+            title: 'New document: ' + doc.title,
+            body: (user.name || user.email) + ' created "' + doc.title + '".'
+        });
+
         return sendJson(res, 201, { ok: true, document: doc });
     }
 
@@ -1634,6 +1715,14 @@ async function handleApi(req, res, url) {
         doc.updatedAt = new Date().toISOString();
 
         saveDocuments(list);
+
+        audit.append(user.email, 'document-update', { docId: docId, title: doc.title, category: doc.category || '' });
+        notifyMembers(doc, user, {
+            type: 'document',
+            title: 'Updated: ' + doc.title,
+            body: (user.name || user.email) + ' updated "' + doc.title + '".'
+        });
+
         return sendJson(res, 200, { ok: true, document: doc });
     }
 
@@ -1998,6 +2087,13 @@ async function handleApi(req, res, url) {
         saveDocuments(list.filter(d => d.documentId !== docId));
         try { const fp = getFileForDocument(doc); if (fp) fs.unlinkSync(fp); } catch (e) { /* ignore */ }
         try { if (fs.existsSync(historyFile(docId))) fs.unlinkSync(historyFile(docId)); } catch (e) { /* ignore */ }
+        audit.append(user.email, 'document-delete', { docId: docId, title: doc.title, category: doc.category || '' });
+        notifyMembers(doc, user, {
+            type: 'update',
+            title: 'Document removed: ' + doc.title,
+            body: (user.name || user.email) + ' deleted "' + doc.title + '".'
+        });
+        notifyStore.removeSharesFor(docId);
         return sendJson(res, 200, { ok: true });
     }
 
@@ -2011,6 +2107,166 @@ async function handleApi(req, res, url) {
             initials: initials(u.name)
         }));
         return sendJson(res, 200, { ok: true, users: list });
+    }
+
+    // ---------- Member notifications, sharing and activity ----------
+
+    // GET /api/notifications?limit=50 - the signed-in member's notifications
+    if (url.pathname === '/api/notifications' && method === 'GET') {
+        const user = getSessionUser(req);
+        if (!user) return sendJson(res, 401, { ok: false, error: 'Not signed in.' });
+        const data = notifyStore.listFor(user.email, url.searchParams.get('limit'));
+        return sendJson(res, 200, { ok: true, notifications: data.notifications, unread: data.unread });
+    }
+
+    // POST /api/notifications/read - mark specific ids (or all) as read
+    if (url.pathname === '/api/notifications/read' && method === 'POST') {
+        const user = getSessionUser(req);
+        if (!user) return sendJson(res, 401, { ok: false, error: 'Not signed in.' });
+        if (rateLimited('notif-read:' + clientIp(req), 120, 60000)) {
+            return sendJson(res, 429, { ok: false, error: 'Too many requests.' });
+        }
+        const body = await safeBody(req);
+        const ids = Array.isArray(body.ids) ? body.ids : null;
+        const updated = notifyStore.markRead(user.email, ids);
+        return sendJson(res, 200, { ok: true, updated: updated, unread: notifyStore.listFor(user.email, 1).unread });
+    }
+
+    // GET /api/activity?limit=50 - recent member activity feed
+    if (url.pathname === '/api/activity' && method === 'GET') {
+        const user = getSessionUser(req);
+        if (!user) return sendJson(res, 401, { ok: false, error: 'Not signed in.' });
+        const wanted = Math.max(1, Math.min(200, Number(url.searchParams.get('limit')) || 50));
+        const items = [];
+        for (const entry of audit.list(400)) {
+            if (!ACTIVITY_ACTIONS.has(entry.action)) continue;
+            items.push(toActivityItem(entry));
+            if (items.length >= wanted) break;
+        }
+        return sendJson(res, 200, { ok: true, activity: items });
+    }
+
+    // GET /api/shared - documents shared with me, and documents I shared
+    if (url.pathname === '/api/shared' && method === 'GET') {
+        const user = getSessionUser(req);
+        if (!user) return sendJson(res, 401, { ok: false, error: 'Not signed in.' });
+        const docs = getDocuments();
+        const docInfo = (record) => {
+            const d = docs.find(x => x.documentId === record.docId);
+            return {
+                shareId: record.id,
+                documentId: record.docId,
+                title: d ? d.title : record.title,
+                category: d ? (d.category || '') : '',
+                format: d ? (d.format || '') : '',
+                status: d ? (d.status || '') : '',
+                type: d ? (d.type || '') : '',
+                hasFile: d ? !!d.hasFile : false,
+                updatedAt: d ? (d.updatedAt || d.date || null) : null,
+                owner: d && d.user ? (d.user.name || d.user.email) : '',
+                from: record.fromName || record.from,
+                fromEmail: record.from,
+                note: record.note || '',
+                ts: record.ts
+            };
+        };
+        const shared = notifyStore.listSharedWith(user.email).map(docInfo);
+        const sharedBy = notifyStore.listSharedBy(user.email).map(docInfo);
+        return sendJson(res, 200, { ok: true, shared: shared, sharedBy: sharedBy });
+    }
+
+    // POST /api/documents/:id/share - share a document with another member
+    const shareMatch = /^\/api\/documents\/([A-Za-z0-9]+)\/share$/.exec(url.pathname);
+    if (shareMatch && method === 'POST') {
+        const user = getSessionUser(req);
+        if (!user) return sendJson(res, 401, { ok: false, error: 'Not signed in.' });
+
+        const list = getDocuments();
+        const doc = list.find(d => d.documentId === shareMatch[1]);
+        if (!doc) return sendJson(res, 404, { ok: false, error: 'Document not found.' });
+        if (!canAccessDocument(doc, user)) return sendJson(res, 403, { ok: false, error: 'Forbidden.' });
+
+        const body = await safeBody(req);
+        const target = String(body.email || '').trim().toLowerCase();
+        const note = String(body.note || '').trim().slice(0, 300);
+        if (!/^\S+@\S+\.\S+$/.test(target)) {
+            return sendJson(res, 400, { ok: false, error: 'Enter a valid member email address.' });
+        }
+        if (target === String(user.email).toLowerCase()) {
+            return sendJson(res, 400, { ok: false, error: 'You already have access to this document.' });
+        }
+        const targetUser = getUsers().find(u => u.email === target);
+        if (!targetUser) return sendJson(res, 404, { ok: false, error: 'No member with that email address.' });
+
+        if (!Array.isArray(doc.members)) doc.members = [];
+        const already = doc.members.some(m => m && m.email === target);
+        if (!already) {
+            doc.members.push({
+                name: targetUser.name || targetUser.email,
+                email: target,
+                avatar: initials(targetUser.name || targetUser.email)
+            });
+            doc.updatedAt = new Date().toISOString();
+            saveDocuments(list);
+        }
+
+        const share = notifyStore.addShare({
+            docId: doc.documentId,
+            title: doc.title,
+            from: user.email,
+            fromName: user.name || user.email,
+            to: target,
+            toName: targetUser.name || target,
+            note: note
+        });
+
+        notifyStore.notify(target, {
+            type: 'share',
+            title: 'New document shared with you',
+            body: user.name + ' shared "' + doc.title + '"' + (note ? ': ' + note : '.'),
+            docId: doc.documentId,
+            actor: user.name || user.email
+        });
+
+        audit.append(user.email, 'document-share', {
+            docId: doc.documentId,
+            title: doc.title,
+            category: doc.category || '',
+            to: target
+        });
+
+        return sendJson(res, 201, {
+            ok: true,
+            share: share,
+            alreadyMember: already,
+            message: 'Shared "' + doc.title + '" with ' + (targetUser.name || target)
+        });
+    }
+
+    // POST /api/documents/:id/unshare - remove a member from a document
+    const unshareMatch = /^\/api\/documents\/([A-Za-z0-9]+)\/unshare$/.exec(url.pathname);
+    if (unshareMatch && method === 'POST') {
+        const user = getSessionUser(req);
+        if (!user) return sendJson(res, 401, { ok: false, error: 'Not signed in.' });
+
+        const list = getDocuments();
+        const doc = list.find(d => d.documentId === unshareMatch[1]);
+        if (!doc) return sendJson(res, 404, { ok: false, error: 'Document not found.' });
+        if (doc.user && doc.user.email !== user.email) {
+            return sendJson(res, 403, { ok: false, error: 'Only the owner can remove members.' });
+        }
+
+        const body = await safeBody(req);
+        const target = String(body.email || '').trim().toLowerCase();
+        if (!Array.isArray(doc.members)) doc.members = [];
+        const before = doc.members.length;
+        doc.members = doc.members.filter(m => !m || m.email !== target);
+        if (doc.members.length === before) {
+            return sendJson(res, 404, { ok: false, error: 'That member does not have access.' });
+        }
+        doc.updatedAt = new Date().toISOString();
+        saveDocuments(list);
+        return sendJson(res, 200, { ok: true });
     }
 
     // ---------- Rooms ----------
@@ -2167,6 +2423,16 @@ async function handleApi(req, res, url) {
             });
             MON_SAVED++;
             saveDocuments(list);
+            audit.append(user.email, 'document-device-sync', {
+                docId: doc.documentId,
+                title: doc.title,
+                category: doc.category || ''
+            });
+            notifyMembers(doc, user, {
+                type: 'update',
+                title: 'Device file synced: ' + doc.title,
+                body: (user.name || user.email) + ' synced the connected file into "' + doc.title + '".'
+            });
             return sendJson(res, 200, { ok: true, message: 'Synced the device file into the document.' });
         } catch (e) {
             return sendJson(res, 500, { ok: false, error: 'Could not sync: ' + e.message });
@@ -2212,6 +2478,16 @@ async function handleApi(req, res, url) {
             });
             doc.updatedAt = new Date().toISOString();
             saveDocuments(getDocuments());
+            audit.append(user.email, 'document-content', {
+                docId: doc.documentId,
+                title: doc.title,
+                category: doc.category || ''
+            });
+            notifyMembers(doc, user, {
+                type: 'update',
+                title: 'New data in ' + doc.title,
+                body: (user.name || user.email) + ' saved changes to "' + doc.title + '".'
+            });
         }
 
         return sendJson(res, 200, { ok: true, connectedWarning: connectedWarning });
@@ -2782,6 +3058,7 @@ function cleanupOrphans() {
         console.error('[store] cloud init failed, continuing with local files:', e && e.message);
     }
     audit.init(DATA_DIR);
+    notifyStore.init(DATA_DIR);
     cloudStore.startSync(15000);
 
     server.listen(PORT, () => {

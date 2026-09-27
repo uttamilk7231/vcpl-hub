@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const tests = ['_phaseD_test.js', '_phaseF_test.js', '_phaseG_test.js', '_phaseI_test.js'];
+const tests = ['_phaseD_test.js', '_phaseF_test.js', '_phaseG_test.js', '_phaseI_test.js', '_phaseN_test.js'];
 const scratchRoot = path.join(os.tmpdir(), 'opencode', 'alltests', String(Date.now()));
 fs.mkdirSync(scratchRoot, { recursive: true });
 try { fs.cpSync('data', scratchRoot, { recursive: true }); } catch (e) { /* no data yet */ }
