@@ -9,7 +9,7 @@ COPY package.json package-lock.json* ./
 RUN npm install --omit=dev --no-audit --no-fund
 
 # Server core
-COPY server.js store.js audit.js release.json ./
+COPY server.js store.js audit.js notify.js release.json ./
 
 # Root web assets (must match the server's static allow-list)
 COPY index.html bootstrap.js splash.js sw.js manifest.json icon-192.png icon-512.png ./
